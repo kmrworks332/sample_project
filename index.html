@@ -33,6 +33,25 @@
   <link href="css/style.css" rel="stylesheet" />
   <!-- responsive style -->
   <link href="css/responsive.css" rel="stylesheet" />
+  <style>
+    .form-group input:focus {
+    outline: 0;
+    }
+    .form-group.success input {
+      border-color: #09c372;
+    }
+
+    .form-group.error input {
+      border-color: #ff3860;
+    }
+
+    .form-group .error {
+      color: #ff3860;
+      font-size: 20px;
+      height: 13px;
+    }
+
+  </style>
 </head>
 
 <body>
@@ -430,34 +449,47 @@
       <div class="row">
         <div class="col-md-5">
           <div class="form_contaier">
-            <form>
+
+            <form id="form">
+
               <div class="form-group">
-                <label for="exampleInputName1">Name</label>
-                <input type="text" class="form-control" id="exampleInputName1">
-              </div>
-              <div class="form-group">
-                <label for="exampleInputNumber1">Phone Number</label>
-                <input type="text" class="form-control" id="exampleInputNumber1">
+                <label for="name">Name</label>
+                <input type="text" class="form-control" id="name">
+                <div class="error"></div>
               </div>
 
               <div class="form-group">
-                <label for="exampleInputEmail1">Email </label>
-                <input type="email" class="form-control" id="exampleInputEmail1">
+                <label for="number">Phone Number</label>
+                <input type="number" class="form-control" id="number">
+                <div class="error"></div>
               </div>
-              <div class="form-group ">
-                <label for="inputState">Select medicine</label>
-                <select id="inputState" class="form-control">
-                  <option selected>Medicine 1</option>
-                  <option selected>Medicine 2</option>
-                  <option selected>Medicine 3</option>
-                </select>
-              </div>
+
               <div class="form-group">
-                <label for="exampleInputMessage">Message</label>
-                <input type="text" class="form-control" id="exampleInputMessage">
+                <label for="emailid">Email </label>
+                <input type="text" class="form-control" id="emailid">
+                <div class="error"></div>
               </div>
+
+              <div class="form-group ">
+                <label for="medicine">Select medicine</label>
+                <select id="medicine" class="form-control">
+                  <option value="" >Please Select</option>
+                  <option  value="medicine1">Medicine 1</option>
+                  <option value="medicine2" >Medicine 2</option>
+                  <option value="medicine3" >Medicine 3</option>
+                </select>
+                <div class="error"></div>
+              </div>
+
+              <div class="form-group">
+                <label for="messgae">Message</label>
+                <input type="text" class="form-control" id="message">
+                <div class="error"></div>
+              </div>
+
               <button type="submit" class="">Send</button>
             </form>
+
           </div>
         </div>
         <div class="col-md-7">
@@ -558,7 +590,88 @@
     </p>
   </section>
   <!-- footer section -->
+  <script>
+    const form = document.getElementById('form');
+    const name = document.getElementById('name');
+    const number = document.getElementById('number');
+    const emailid = document.getElementById('emailid');
+    const message = document.getElementById('message');
+    const medicine = document.getElementById('medicine');
 
+    form.addEventListener('submit', e => {
+      e.preventDefault();
+      validateinputs();
+    });
+
+    const setError = (element, message) => {
+      const inputControl = element.parentElement;
+      const errorDisplay = inputControl.querySelector('.error');
+      errorDisplay.innerText = message;
+      inputControl.classList.add('error');
+      inputControl.classList.remove('success')
+    };
+
+    const setSuccess = (element) => {
+      const inputControl = element.parentElement;
+      const errorDisplay = inputControl.querySelector('.error');
+
+      errorDisplay.innerText = '';
+      inputControl.classList.add('success');
+      inputControl.classList.remove('error');
+    };
+
+    const isValidEmail = email => {
+      const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+      return re.test(String(email).toLowerCase());
+    }
+
+    const validateinputs = () => {
+      const nameValue = name.value.trim();
+      const numberValue = number.value.trim();
+      const emailidValue = emailid.value.trim();
+      const messageValue = message.value.trim();
+      const medicineValue = medicine.value.trim();
+      if (nameValue === '') {
+        setError(name, 'Name is required');
+      } else {
+        setSuccess(name);
+      }
+
+      if (numberValue === '') {
+        setError(number, 'Number is required');
+      }else if(numberValue.length < 10 || numberValue.length > 12){
+        setError(number, 'Number should be between 10 - 12 digits long');
+      }
+      else {
+        setSuccess(number);
+      }
+
+      if (emailidValue === '') {
+        setError(emailid, 'Email is required');
+      } else if (!isValidEmail(emailidValue)) {
+        setError(emailid, 'Provide a valid email address');
+      } else {
+        setSuccess(emailid);
+      }
+
+      if (messageValue === '') {
+        setError(message, 'Message is required');
+      } else if(messageValue.trim().length < 20 ){
+        setError(message, 'Message Should Be greater Than 20 Length');
+      }else {
+        setSuccess(message);
+      }
+
+      if (medicineValue === '') {
+        setError(medicine, 'Select Any Medicine');
+      } else {
+        setSuccess(medicine);
+      }
+
+
+    }
+
+  </script>
   <script type="text/javascript" src="js/jquery-3.4.1.min.js"></script>
   <script type="text/javascript" src="js/bootstrap.js"></script>
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.2.1/owl.carousel.min.js">
